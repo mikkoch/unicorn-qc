@@ -1,0 +1,1077 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={UNICORN},
+            pdfauthor={Danfeng Chen},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{UNICORN}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Danfeng Chen}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2020/1/30}
+
+
+\begin{document}
+\maketitle
+
+\section{Manhattan plot of crohn's cohort}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(}
+\NormalTok{  cohort }\OperatorTok{==}\StringTok{ "germ"}\NormalTok{)}
+\NormalTok{data.gwas <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(type }\OperatorTok{==}\StringTok{ "UNICORN"} \OperatorTok{&}\StringTok{ }\NormalTok{chromosome }\OperatorTok{<=}\StringTok{ }\DecValTok{2} \OperatorTok{&}\StringTok{ }\NormalTok{distca }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{)}
+\NormalTok{data.gwas <-}\StringTok{ }\NormalTok{data.gwas }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}
+  \DataTypeTok{log_pvalues =} \OperatorTok{-}\NormalTok{log_pvalues,}
+  \DataTypeTok{distco =} \OtherTok{NA}\NormalTok{,}
+  \DataTypeTok{distca =} \OtherTok{NA}\NormalTok{)}
+\NormalTok{data <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(data, data.gwas)}
+\NormalTok{dist_co <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)}
+\NormalTok{dist_ca <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\NormalTok{cohort <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"germ"}\NormalTok{)}
+\NormalTok{paras   <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(cohort, dist_co, dist_ca)}
+\KeywordTok{colnames}\NormalTok{(paras) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"cc"}\NormalTok{, }\StringTok{"dist_co"}\NormalTok{, }\StringTok{"dist_ca"}\NormalTok{)}
+\NormalTok{paras }\OperatorTok{%>%}\StringTok{ }\KeywordTok{pmap_dbl}\NormalTok{(plotAndSave)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] germ
+## Levels: germ
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 202 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## [1] germ
+## Levels: germ
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 202 rows containing missing values (geom_point).
+
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## [1] germ
+## Levels: germ
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 202 rows containing missing values (geom_point).
+
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## [1] germ
+## Levels: germ
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 202 rows containing missing values (geom_point).
+
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## [1] germ
+## Levels: germ
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 202 rows containing missing values (geom_point).
+
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0 0 0 0 0
+\end{verbatim}
+
+\section{p-values versus p-values}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"../scripts/data/raw_data/crohnDisease/crohns_chop.RDS"}\NormalTok{)}
+\NormalTok{meta <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"../scripts/data/raw_data/crohnDisease/crohn_meta.v2.RDS"}\NormalTok{)}
+\CommentTok{#p <- qq.plot(data=data, meta=meta)}
+\CommentTok{#ggsave(p, filename = "../scripts/data/raw_data/crohnDisease/figures/scatter_logpvals_chop.png")}
+\end{Highlighting}
+\end{Shaded}
+
+\section{qq-plot}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cohorts <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"bel1"}\NormalTok{, }\StringTok{"bel2"}\NormalTok{, }\StringTok{"chop"}\NormalTok{, }\StringTok{"germ"}\NormalTok{)}
+\NormalTok{dist_cos <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"3.5"}\NormalTok{)}
+\NormalTok{dist_cas <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"5"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (cohort }\ControlFlowTok{in}\NormalTok{ cohorts) \{}
+\ControlFlowTok{for}\NormalTok{ (dist_co }\ControlFlowTok{in}\NormalTok{ dist_cos) \{}
+\ControlFlowTok{for}\NormalTok{ (dist_ca }\ControlFlowTok{in}\NormalTok{ dist_cas) \{}
+\NormalTok{    data <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}
+      \KeywordTok{paste0}\NormalTok{(}
+        \StringTok{"../scripts/data/raw_data/crohnDisease/crohns_"}\NormalTok{, }
+\NormalTok{        cohort, }\StringTok{"_distco_"}\NormalTok{, dist_co, }\StringTok{"_distca_"}\NormalTok{, dist_ca, }\StringTok{".RDS"}\NormalTok{))}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{) \{}
+        \CommentTok{# Get pvalues for UNICORN}
+\NormalTok{        data.unicorn  <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(type }\OperatorTok{==}\StringTok{ "UNICORN"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{10000}\NormalTok{)}
+\NormalTok{        pvals.unicorn <-}\StringTok{ }\NormalTok{data.unicorn}\OperatorTok{$}\NormalTok{pvalues}
+\NormalTok{        lambda.unicorn<-}\StringTok{ }\KeywordTok{median}\NormalTok{(data.unicorn}\OperatorTok{$}\NormalTok{chisq_stats)}\OperatorTok{/}\KeywordTok{qchisq}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+        
+        \CommentTok{# Get pvalues for standard GWAS}
+\NormalTok{        data.gwas  <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(type }\OperatorTok{!=}\StringTok{ "UNICORN"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{10000}\NormalTok{)}
+\NormalTok{        pvals.gwas <-}\StringTok{ }\NormalTok{data.gwas}\OperatorTok{$}\NormalTok{pvalues}
+\NormalTok{        lambda.gwas<-}\StringTok{ }\KeywordTok{median}\NormalTok{(data.gwas}\OperatorTok{$}\NormalTok{chisq_stats)}\OperatorTok{/}\KeywordTok{qchisq}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+        
+        \CommentTok{# Get pvalues list}
+\NormalTok{        my.pvalue.list<-}\KeywordTok{list}\NormalTok{(}\StringTok{"UNICORN"}\NormalTok{=pvals.unicorn, }\StringTok{"Standard GWAS"}\NormalTok{=pvals.gwas)}
+\NormalTok{        filename <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}
+          \StringTok{"../scripts/data/raw_data/crohnDisease/figures/qq_"}\NormalTok{, }
+\NormalTok{          cohort, }\StringTok{"_distco_"}\NormalTok{, dist_co, }\StringTok{"_distca_"}\NormalTok{, }
+\NormalTok{          dist_ca, }\StringTok{"-"}\NormalTok{, i, }\StringTok{".png"}\NormalTok{)}
+\NormalTok{        p <-}\StringTok{ }\KeywordTok{qqunif.plot}\NormalTok{(my.pvalue.list, }\DataTypeTok{auto.key=}\KeywordTok{list}\NormalTok{(}\DataTypeTok{corner=}\KeywordTok{c}\NormalTok{(.}\DecValTok{95}\NormalTok{,.}\DecValTok{05}\NormalTok{)), }\DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{))}
+        \KeywordTok{png}\NormalTok{(filename)}
+        \KeywordTok{print}\NormalTok{(p)}
+        \KeywordTok{dev.off}\NormalTok{()}
+        \KeywordTok{print}\NormalTok{(}
+          \KeywordTok{paste0}\NormalTok{(}\StringTok{"Cohort = "}\NormalTok{,cohort, }
+                 \StringTok{", Index = "}\NormalTok{, i, }
+                 \StringTok{", chisq for UNICORN = "}\NormalTok{, lambda.unicorn, }
+                 \StringTok{", chisq for GWAS  = "}\NormalTok{, lambda.gwas))}
+\NormalTok{    \}}
+\NormalTok{\}}
+\NormalTok{\}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: grid
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 1, chisq for UNICORN = 1.25325203924185, chisq for GWAS  = 1.02325752368948"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 2, chisq for UNICORN = 1.27115563980245, chisq for GWAS  = 1.07265684424033"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 3, chisq for UNICORN = 1.29912658113255, chisq for GWAS  = 1.02058146021034"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 4, chisq for UNICORN = 1.30295129138122, chisq for GWAS  = 1.0609123296856"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 5, chisq for UNICORN = 1.24629502318608, chisq for GWAS  = 1.03780950219132"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 6, chisq for UNICORN = 1.29797257372993, chisq for GWAS  = 1.04223850320158"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 7, chisq for UNICORN = 1.27487044458421, chisq for GWAS  = 1.05354012767396"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 8, chisq for UNICORN = 1.26400079390623, chisq for GWAS  = 1.02139215783704"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 9, chisq for UNICORN = 1.23208424631386, chisq for GWAS  = 1.04928758818871"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 10, chisq for UNICORN = 1.28688311211812, chisq for GWAS  = 1.064686101771"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 11, chisq for UNICORN = 1.27492539731767, chisq for GWAS  = 1.04822530755814"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 12, chisq for UNICORN = 1.28072840597083, chisq for GWAS  = 1.10399423876863"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 13, chisq for UNICORN = 1.30241275459333, chisq for GWAS  = 1.05495876963429"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 14, chisq for UNICORN = 1.28838881701486, chisq for GWAS  = 1.03371139336541"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 15, chisq for UNICORN = 1.27988213387557, chisq for GWAS  = 1.060666290584"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 16, chisq for UNICORN = 1.27976123786197, chisq for GWAS  = 1.04552997610761"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 17, chisq for UNICORN = 1.29065286963333, chisq for GWAS  = 1.01955487024969"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 18, chisq for UNICORN = 1.25671406144971, chisq for GWAS  = 1.12637555752633"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 19, chisq for UNICORN = 1.28979560699139, chisq for GWAS  = 1.08113970906751"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 20, chisq for UNICORN = 1.24792162409643, chisq for GWAS  = 1.04408790519847"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 21, chisq for UNICORN = 1.30299525356799, chisq for GWAS  = 1.06454929362557"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 22, chisq for UNICORN = 1.25166940051827, chisq for GWAS  = 1.02907650610435"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 23, chisq for UNICORN = 1.28398160779154, chisq for GWAS  = 1.08735691493665"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 24, chisq for UNICORN = 1.26183565620799, chisq for GWAS  = 1.06167773587199"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 25, chisq for UNICORN = 1.29168598102234, chisq for GWAS  = 1.07342480850655"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 26, chisq for UNICORN = 1.31848093385643, chisq for GWAS  = 1.02347386638866"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 27, chisq for UNICORN = 1.26954002943879, chisq for GWAS  = 1.11396234121374"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 28, chisq for UNICORN = 1.25381255712313, chisq for GWAS  = 1.01982494506596"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 29, chisq for UNICORN = 1.25847254892036, chisq for GWAS  = 1.06189639938041"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 30, chisq for UNICORN = 1.24129432444141, chisq for GWAS  = 1.01342861383126"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 31, chisq for UNICORN = 1.26096740301935, chisq for GWAS  = 1.06575333781188"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 32, chisq for UNICORN = 1.27720044048283, chisq for GWAS  = 1.05864441495726"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 33, chisq for UNICORN = 1.25251567261352, chisq for GWAS  = 1.05954591641957"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 34, chisq for UNICORN = 1.32338271768088, chisq for GWAS  = 1.06315421403902"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 35, chisq for UNICORN = 1.25579085552761, chisq for GWAS  = 1.04145009903552"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 36, chisq for UNICORN = 1.2863775469703, chisq for GWAS  = 1.06999800175807"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 37, chisq for UNICORN = 1.26000023491049, chisq for GWAS  = 1.08749404143615"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 38, chisq for UNICORN = 1.2146422487143, chisq for GWAS  = 1.03485075854945"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 39, chisq for UNICORN = 1.27513421770481, chisq for GWAS  = 1.00954787088227"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 40, chisq for UNICORN = 1.30733651951116, chisq for GWAS  = 1.05812547856492"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 41, chisq for UNICORN = 1.32603143943355, chisq for GWAS  = 1.07748610590197"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 42, chisq for UNICORN = 1.25947268866929, chisq for GWAS  = 1.07345215121791"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 43, chisq for UNICORN = 1.2100701812906, chisq for GWAS  = 1.07762339653089"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 44, chisq for UNICORN = 1.33873651140903, chisq for GWAS  = 1.07696445790696"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 45, chisq for UNICORN = 1.25873632204096, chisq for GWAS  = 1.1150160392769"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 46, chisq for UNICORN = 1.19811246649015, chisq for GWAS  = 1.0591907614892"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 47, chisq for UNICORN = 1.25838462454683, chisq for GWAS  = 1.05021400311632"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 48, chisq for UNICORN = 1.2869050932115, chisq for GWAS  = 1.01931170475943"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 49, chisq for UNICORN = 1.26805630563542, chisq for GWAS  = 1.04463198259547"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel1, Index = 50, chisq for UNICORN = 1.26009914983071, chisq for GWAS  = 1.0122422370012"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 1, chisq for UNICORN = 1.04436570882152, chisq for GWAS  = 0.982855905933757"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 2, chisq for UNICORN = 1.03900232203603, chisq for GWAS  = 1.02699143913311"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 3, chisq for UNICORN = 1.0677865638213, chisq for GWAS  = 1.04615595307428"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 4, chisq for UNICORN = 1.0638629386524, chisq for GWAS  = 1.01879854491504"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 5, chisq for UNICORN = 1.06706118773965, chisq for GWAS  = 0.987481346716946"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 6, chisq for UNICORN = 1.03651845848373, chisq for GWAS  = 1.06794355368583"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 7, chisq for UNICORN = 1.03407855711819, chisq for GWAS  = 1.02880552248887"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 8, chisq for UNICORN = 1.08965775173756, chisq for GWAS  = 1.0427007532708"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 9, chisq for UNICORN = 1.04886084241838, chisq for GWAS  = 1.03208437778967"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 10, chisq for UNICORN = 1.05044348114197, chisq for GWAS  = 1.007636140316"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 11, chisq for UNICORN = 1.05228989298616, chisq for GWAS  = 1.03604477890419"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 12, chisq for UNICORN = 1.04997088763423, chisq for GWAS  = 1.00314377871169"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 13, chisq for UNICORN = 1.07083094525487, chisq for GWAS  = 1.06728632559856"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 14, chisq for UNICORN = 1.07886503488642, chisq for GWAS  = 1.01518163313042"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 15, chisq for UNICORN = 1.04006840506511, chisq for GWAS  = 0.988765892848746"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 16, chisq for UNICORN = 1.06042289753793, chisq for GWAS  = 1.01224223871181"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 17, chisq for UNICORN = 1.05035555676844, chisq for GWAS  = 1.06679349558753"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 18, chisq for UNICORN = 1.02848436885218, chisq for GWAS  = 1.01901460441894"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 19, chisq for UNICORN = 1.0587633249875, chisq for GWAS  = 0.991711512382994"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 20, chisq for UNICORN = 1.06415968341307, chisq for GWAS  = 1.02858884830632"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 21, chisq for UNICORN = 1.00837166840657, chisq for GWAS  = 1.01388687644406"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 22, chisq for UNICORN = 1.0368152032444, chisq for GWAS  = 1.03525777119919"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 23, chisq for UNICORN = 1.06178572532769, chisq for GWAS  = 1.02783059490437"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 24, chisq for UNICORN = 1.05391649389651, chisq for GWAS  = 0.963303495242495"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 25, chisq for UNICORN = 1.05081715972948, chisq for GWAS  = 1.02644992638346"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 26, chisq for UNICORN = 1.12781692985075, chisq for GWAS  = 1.07581160673481"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 27, chisq for UNICORN = 1.06340133569135, chisq for GWAS  = 1.03156942626095"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 28, chisq for UNICORN = 1.09860405674451, chisq for GWAS  = 1.02039230111335"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 29, chisq for UNICORN = 1.02351664174758, chisq for GWAS  = 1.01140674884091"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 30, chisq for UNICORN = 1.09831830253053, chisq for GWAS  = 1.01418354393582"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 31, chisq for UNICORN = 1.03612279880283, chisq for GWAS  = 0.998979612376279"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 32, chisq for UNICORN = 1.04255226861741, chisq for GWAS  = 1.03243683664155"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 33, chisq for UNICORN = 1.042958918845, chisq for GWAS  = 1.02885969315032"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 34, chisq for UNICORN = 1.03436431133218, chisq for GWAS  = 1.06074829504905"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 35, chisq for UNICORN = 1.06916038215774, chisq for GWAS  = 1.02869718370488"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 36, chisq for UNICORN = 1.08783332098675, chisq for GWAS  = 1.04093365355632"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 37, chisq for UNICORN = 1.01271293434975, chisq for GWAS  = 1.01817747670346"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 38, chisq for UNICORN = 1.02634121224732, chisq for GWAS  = 1.01315882585512"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 39, chisq for UNICORN = 1.02999007374892, chisq for GWAS  = 1.06312687575874"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 40, chisq for UNICORN = 1.01918636635109, chisq for GWAS  = 1.04253760090678"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 41, chisq for UNICORN = 1.07233665015161, chisq for GWAS  = 0.991497184037808"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 42, chisq for UNICORN = 1.10495659273225, chisq for GWAS  = 1.02712668578"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 43, chisq for UNICORN = 1.0386396339952, chisq for GWAS  = 1.02988909647566"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 44, chisq for UNICORN = 1.04471740631565, chisq for GWAS  = 0.983924718129664"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 45, chisq for UNICORN = 1.0353754416278, chisq for GWAS  = 1.02534039565553"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 46, chisq for UNICORN = 1.01621891874436, chisq for GWAS  = 1.04362543920143"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 47, chisq for UNICORN = 1.07921673238055, chisq for GWAS  = 1.01137979410345"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 48, chisq for UNICORN = 1.02273631293247, chisq for GWAS  = 0.998013201989653"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 49, chisq for UNICORN = 1.10884724626107, chisq for GWAS  = 1.02028422539302"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = bel2, Index = 50, chisq for UNICORN = 1.05565300027378, chisq for GWAS  = 1.01828545533762"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 1, chisq for UNICORN = 1.12216778885128, chisq for GWAS  = 1.02991621352304"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 2, chisq for UNICORN = 1.09501014797636, chisq for GWAS  = 1.06044765984292"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 3, chisq for UNICORN = 1.12260741071894, chisq for GWAS  = 1.06613660956861"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 4, chisq for UNICORN = 1.10289036995423, chisq for GWAS  = 1.12701534496782"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 5, chisq for UNICORN = 1.10192320184537, chisq for GWAS  = 1.04504012423089"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 6, chisq for UNICORN = 1.07119363329569, chisq for GWAS  = 1.06485026434708"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 7, chisq for UNICORN = 1.09943933829307, chisq for GWAS  = 1.12746047983665"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 8, chisq for UNICORN = 1.09191081380933, chisq for GWAS  = 1.04792566473761"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 9, chisq for UNICORN = 1.06166482931408, chisq for GWAS  = 1.09339045239581"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 10, chisq for UNICORN = 1.11388091664582, chisq for GWAS  = 1.0900556093008"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 11, chisq for UNICORN = 1.12173915753031, chisq for GWAS  = 1.03914027606389"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 12, chisq for UNICORN = 1.10479173453188, chisq for GWAS  = 1.05015954719057"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 13, chisq for UNICORN = 1.15843659293352, chisq for GWAS  = 1.04702713930111"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 14, chisq for UNICORN = 1.12898192780006, chisq for GWAS  = 1.01582918924757"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 15, chisq for UNICORN = 1.06310459093068, chisq for GWAS  = 1.06556178936513"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 16, chisq for UNICORN = 1.06986377714601, chisq for GWAS  = 1.07762339324777"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 17, chisq for UNICORN = 1.08744865185255, chisq for GWAS  = 1.07227298434314"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 18, chisq for UNICORN = 1.10213202223251, chisq for GWAS  = 1.0299974724839"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 19, chisq for UNICORN = 1.06187364970122, chisq for GWAS  = 1.07241006448799"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 20, chisq for UNICORN = 1.11850793680298, chisq for GWAS  = 1.0909922216722"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 21, chisq for UNICORN = 1.11245214557591, chisq for GWAS  = 1.05550455419251"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 22, chisq for UNICORN = 1.11519978224881, chisq for GWAS  = 1.05313100890209"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 23, chisq for UNICORN = 1.11695826971946, chisq for GWAS  = 1.04367983981631"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 24, chisq for UNICORN = 1.10092306209644, chisq for GWAS  = 1.05084082237007"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 25, chisq for UNICORN = 1.12073901778137, chisq for GWAS  = 1.07990312289751"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 26, chisq for UNICORN = 1.11811227712208, chisq for GWAS  = 1.08408170128437"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 27, chisq for UNICORN = 1.13164164009943, chisq for GWAS  = 1.05201299142443"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 28, chisq for UNICORN = 1.12609141402017, chisq for GWAS  = 1.08138707553373"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 29, chisq for UNICORN = 1.12885004123976, chisq for GWAS  = 1.06063895811224"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 30, chisq for UNICORN = 1.0953508549238, chisq for GWAS  = 1.02888681656247"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 31, chisq for UNICORN = 1.14975406104716, chisq for GWAS  = 1.05820740084894"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 32, chisq for UNICORN = 1.14769882881584, chisq for GWAS  = 1.07482373623141"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 33, chisq for UNICORN = 1.11425459523333, chisq for GWAS  = 1.03734782511327"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 34, chisq for UNICORN = 1.10672607074959, chisq for GWAS  = 1.03816245975399"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 35, chisq for UNICORN = 1.13138885752552, chisq for GWAS  = 1.00892842604532"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 36, chisq for UNICORN = 1.11350723805831, chisq for GWAS  = 1.03178616819131"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 37, chisq for UNICORN = 1.07900791199341, chisq for GWAS  = 1.05114063345573"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 38, chisq for UNICORN = 1.10967153726294, chisq for GWAS  = 1.09000025584415"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 39, chisq for UNICORN = 1.14169799032223, chisq for GWAS  = 1.05018683777328"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 40, chisq for UNICORN = 1.13196036595348, chisq for GWAS  = 1.0384883881517"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 41, chisq for UNICORN = 1.08763549114631, chisq for GWAS  = 1.08185436897666"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 42, chisq for UNICORN = 1.10764927667169, chisq for GWAS  = 1.05444035425826"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 43, chisq for UNICORN = 1.06052181245816, chisq for GWAS  = 1.04389744688707"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 44, chisq for UNICORN = 1.09657080560657, chisq for GWAS  = 1.0508953338177"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 45, chisq for UNICORN = 1.14167600922885, chisq for GWAS  = 1.09350075682891"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 46, chisq for UNICORN = 1.11907944523094, chisq for GWAS  = 1.07422017925397"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 47, chisq for UNICORN = 1.09238340731707, chisq for GWAS  = 1.02937435885837"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 48, chisq for UNICORN = 1.09591137280507, chisq for GWAS  = 1.07232781664787"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 49, chisq for UNICORN = 1.1440829389543, chisq for GWAS  = 1.04852485549453"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = chop, Index = 50, chisq for UNICORN = 1.10661616528268, chisq for GWAS  = 1.11271491179343"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 1, chisq for UNICORN = 1.12387132358847, chisq for GWAS  = 1.01769146294165"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 2, chisq for UNICORN = 1.1748015169573, chisq for GWAS  = 1.02636872247444"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 3, chisq for UNICORN = 1.09735113442167, chisq for GWAS  = 1.00365458576677"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 4, chisq for UNICORN = 1.16417365830653, chisq for GWAS  = 1.00120880925579"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 5, chisq for UNICORN = 1.1455227005709, chisq for GWAS  = 1.04093367707119"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 6, chisq for UNICORN = 1.11361714352522, chisq for GWAS  = 1.03799951111617"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 7, chisq for UNICORN = 1.11000125366369, chisq for GWAS  = 1.04836142220398"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 8, chisq for UNICORN = 1.13025683121629, chisq for GWAS  = 1.03194881883531"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 9, chisq for UNICORN = 1.15149056742444, chisq for GWAS  = 1.0747688640135"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 10, chisq for UNICORN = 1.1080229552592, chisq for GWAS  = 1.02921182275898"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 11, chisq for UNICORN = 1.10141763669756, chisq for GWAS  = 1.03360301385005"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 12, chisq for UNICORN = 1.07879909160627, chisq for GWAS  = 1.01920366393687"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 13, chisq for UNICORN = 1.11901350195079, chisq for GWAS  = 1.05588664848752"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 14, chisq for UNICORN = 1.10986936710339, chisq for GWAS  = 1.04618327727936"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 15, chisq for UNICORN = 1.1822421170675, chisq for GWAS  = 1.001746196025"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 16, chisq for UNICORN = 1.18617673278309, chisq for GWAS  = 1.0006715301642"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 17, chisq for UNICORN = 1.15561202243378, chisq for GWAS  = 1.03259953752755"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 18, chisq for UNICORN = 1.11003422530376, chisq for GWAS  = 1.06635549387218"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 19, chisq for UNICORN = 1.09919754626586, chisq for GWAS  = 1.02228419178798"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 20, chisq for UNICORN = 1.15249070717337, chisq for GWAS  = 1.00882071713199"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 21, chisq for UNICORN = 1.10590177974773, chisq for GWAS  = 1.03221992914292"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 22, chisq for UNICORN = 1.11706817518638, chisq for GWAS  = 1.03924895642061"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 23, chisq for UNICORN = 1.14900670387214, chisq for GWAS  = 1.02663939030546"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 24, chisq for UNICORN = 1.10757234284485, chisq for GWAS  = 1.00067151723858"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 25, chisq for UNICORN = 1.1085505015004, chisq for GWAS  = 1.01137980694014"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 26, chisq for UNICORN = 1.04759692954885, chisq for GWAS  = 1.00882074499063"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 27, chisq for UNICORN = 1.0689515617706, chisq for GWAS  = 1.01550532370592"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 28, chisq for UNICORN = 1.10352782166234, chisq for GWAS  = 0.97410395452279"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 29, chisq for UNICORN = 1.15564499407386, chisq for GWAS  = 1.03759220578564"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 30, chisq for UNICORN = 1.15391947824328, chisq for GWAS  = 1.02793892184023"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 31, chisq for UNICORN = 1.05308121234795, chisq for GWAS  = 1.04112396470848"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 32, chisq for UNICORN = 1.11650765730511, chisq for GWAS  = 1.01531646454278"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 33, chisq for UNICORN = 1.11618893145105, chisq for GWAS  = 1.00206866425325"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 34, chisq for UNICORN = 1.09962617758683, chisq for GWAS  = 1.04947831835547"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 35, chisq for UNICORN = 1.11446341562047, chisq for GWAS  = 1.04988701499079"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 36, chisq for UNICORN = 1.05687295095655, chisq for GWAS  = 1.02366317251319"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 37, chisq for UNICORN = 1.14652284031984, chisq for GWAS  = 1.01620689221786"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 38, chisq for UNICORN = 1.0808433332909, chisq for GWAS  = 1.04759888342683"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 39, chisq for UNICORN = 1.07907385527356, chisq for GWAS  = 1.04256479198866"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 40, chisq for UNICORN = 1.09985697906735, chisq for GWAS  = 1.03848839488063"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 41, chisq for UNICORN = 1.08853671597502, chisq for GWAS  = 1.07751356378155"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 42, chisq for UNICORN = 1.08197535960014, chisq for GWAS  = 1.0133745475246"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 43, chisq for UNICORN = 1.17588958107976, chisq for GWAS  = 1.04808908800029"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 44, chisq for UNICORN = 1.10827573783311, chisq for GWAS  = 0.994820630143655"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 45, chisq for UNICORN = 1.09829632143715, chisq for GWAS  = 1.06934042456363"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 46, chisq for UNICORN = 1.14614916173232, chisq for GWAS  = 1.02802014269766"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 47, chisq for UNICORN = 1.07212782976447, chisq for GWAS  = 1.04003684989985"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 48, chisq for UNICORN = 1.08666832303745, chisq for GWAS  = 1.04610152941047"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 49, chisq for UNICORN = 1.11244115502922, chisq for GWAS  = 1.01361721239432"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "Cohort = germ, Index = 50, chisq for UNICORN = 1.12852032483902, chisq for GWAS  = 1.01882554788161"
+\end{verbatim}
+
+
+\end{document}

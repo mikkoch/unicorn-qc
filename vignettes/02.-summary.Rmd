@@ -1,0 +1,64 @@
+---
+title: "Summary"
+author: "Danfeng Chen"
+date: "2020/2/25"
+output: 
+  pdf_document:
+    extra_dependencies: ["float"]
+---
+
+\section{Summary}
+
+We compared the performance of UNICORN method and the standard GWAS using the crohn's 
+disease dataset from Inflammatory Bowel Disease Genetics Consortium. Here is a summary 
+of the dataset.
+
+
+\section{Procedure for standard GWAS}
+
+The crohn's disease cases were compared with its internal controls (controls that collected 
+together with cases, \emph{i.e.,} from same region, same date and etc). Related samples (PI-HAT > 0.025)
+are removed from the analysis. All other standard filters for GWAS are also applied. A logistic 
+regression with first 10 PCs are done to detected loci that are strongly correlated with the 
+the disease status.
+
+\section{Procedures for UNICORN}
+The crohn's disease cases were compared with the external UNICORN controls. The detailed method 
+for UNICORN is described in the draft paper. All cases are going through the same QC procedure
+as UNICORN controls to ensure the quality of the data and to avoid batch effects. 
+
+\section{Manhattan plot and QQ plot}
+The resulting manhattan plots and QQ plots are as follows: 
+
+\subsubsection{Belgium Cohort}
+
+\begin{figure}[H]
+\centering
+\includegraphics{../scripts/data/raw_data/crohnDisease/figures/manhattan_bel1_distco_1_distca_5.png}
+\includegraphics[width=0.5\textwidth]{../scripts/data/raw_data/crohnDisease/figures/qq_bel2_distco_3.5_distca_5-29.png}
+\end{figure}
+
+The manhattan plot and QQ plot (tail not shown) for two methods. On the top is the manhattan plot for UNICORN. On the bottom is the manhattan plot 
+for standard GWAS. Lambda GP are 1.0535 and 1.014. 
+
+\subsubsection{CHOP Cohort (samples from North America including USA, Canada)}
+
+\begin{figure}[H]
+\centering
+\includegraphics{../scripts/data/raw_data/crohnDisease/figures/manhattan_chop_distco_5_distca_5.png}
+\includegraphics[width=0.5\textwidth]{../scripts/data/raw_data/crohnDisease/figures/qq_chop_distco_3.5_distca_5-40.png}
+\end{figure}
+
+The manhattan plot and QQ plot (tail not shown) for two methods. On the top is the manhattan plot for UNICORN. On the bottom is the manhattan plot 
+for standard GWAS. Lambda GP are 1.0605 and 1.0439.
+
+\subsubsection{German Cohort}
+
+\begin{figure}[H]
+\centering
+\includegraphics{../scripts/data/raw_data/crohnDisease/figures/manhattan_germ_distco_1_distca_5.png}
+\includegraphics[width=0.5\textwidth]{../scripts/data/raw_data/crohnDisease/figures/qq_germ_distco_3.5_distca_5-26.png}
+\end{figure}
+
+The manhattan plot and QQ plot (tail not shown) for two methods. On the top is the manhattan plot for UNICORN. On the bottom is the manhattan plot 
+for standard GWAS. Lambda GP are 1.0476 and 1.0223.

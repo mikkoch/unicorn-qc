@@ -1,0 +1,117 @@
+---
+title: "UNICORN"
+author: "Danfeng Chen"
+date: "2020/1/30"
+output: 
+  pdf_document:
+    keep_tex: true
+    fig_caption: yes
+---
+
+```{r setup, message=FALSE, echo=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(unikn)
+source("../R/manhattan.r")
+source("../R/qq.r")
+```
+
+\section{Manhattan plot of crohn's cohort}
+
+```{r manhattan, message=FALSE, warning=FALSE, echo=FALSE, error=FALSE}
+plotAndSave <- function(cc, dist_co, dist_ca) {
+  print(cc)
+  sub <- data %>% 
+    filter(cohort == cc) %>%
+    filter(distco == dist_co | is.na(distco)) %>%
+    filter(distca == dist_ca | is.na(distca))
+  p <- manhattan(data=sub, meta=meta, ymin=-20, ymax=20)
+  filename <- paste0(
+    "../scripts/data/raw_data/crohnDisease/figures/manhattan_", 
+    cc, "_distco_", dist_co, "_distca_", dist_ca, ".png")
+  ggsave(p, filename = filename, height = 5, width = 13)
+  return(0)
+}
+
+dist_co <- c(1, 2, 3, 4, 5)
+dist_ca <- c(1, 2, 3, 4, 5)
+cohort  <- c("bel1", "bel2", "chop", "germ", "wtcc", "nidk")
+paras   <- expand.grid(cohort, dist_co, dist_ca)
+colnames(paras) <- c("cc", "dist_co", "dist_ca")
+
+data <- readRDS("../scripts/data/raw_data/crohnDisease/crohn_data.RDS") 
+meta <- readRDS("../scripts/data/raw_data/crohnDisease/crohn_meta.RDS")
+#paras %>% pmap_dbl(plotAndSave)
+```
+
+```{r}
+data <- data %>% filter(
+  cohort == "germ")
+data.gwas <- data %>% filter(type == "UNICORN" & chromosome <= 2 & distca == 2)
+data.gwas <- data.gwas %>% mutate(
+  log_pvalues = -log_pvalues,
+  distco = NA,
+  distca = NA)
+data <- rbind(data, data.gwas)
+dist_co <- c(1, 2, 3, 4, 5)
+dist_ca <- c(5)
+cohort <- c("germ")
+paras   <- expand.grid(cohort, dist_co, dist_ca)
+colnames(paras) <- c("cc", "dist_co", "dist_ca")
+paras %>% pmap_dbl(plotAndSave)
+```
+
+\section{p-values versus p-values}
+
+```{r}
+data <- readRDS("../scripts/data/raw_data/crohnDisease/crohns_chop.RDS")
+meta <- readRDS("../scripts/data/raw_data/crohnDisease/crohn_meta.v2.RDS")
+#p <- qq.plot(data=data, meta=meta)
+#ggsave(p, filename = "../scripts/data/raw_data/crohnDisease/figures/scatter_logpvals_chop.png")
+```
+
+\section{qq-plot}
+
+```{r}
+cohorts <- c("bel1", "bel2", "chop", "germ")
+dist_cos <- c("3.5")
+dist_cas <- c("5")
+
+for (cohort in cohorts) {
+for (dist_co in dist_cos) {
+for (dist_ca in dist_cas) {
+    data <- readRDS(
+      paste0(
+        "../scripts/data/raw_data/crohnDisease/crohns_", 
+        cohort, "_distco_", dist_co, "_distca_", dist_ca, ".RDS"))
+    for (i in 1:50) {
+        # Get pvalues for UNICORN
+        data.unicorn  <- data %>% filter(type == "UNICORN") %>% sample_n(10000)
+        pvals.unicorn <- data.unicorn$pvalues
+        lambda.unicorn<- median(data.unicorn$chisq_stats)/qchisq(0.5,1)
+        
+        # Get pvalues for standard GWAS
+        data.gwas  <- data %>% filter(type != "UNICORN") %>% sample_n(10000)
+        pvals.gwas <- data.gwas$pvalues
+        lambda.gwas<- median(data.gwas$chisq_stats)/qchisq(0.5,1)
+        
+        # Get pvalues list
+        my.pvalue.list<-list("UNICORN"=pvals.unicorn, "Standard GWAS"=pvals.gwas)
+        filename <- paste0(
+          "../scripts/data/raw_data/crohnDisease/figures/qq_", 
+          cohort, "_distco_", dist_co, "_distca_", 
+          dist_ca, "-", i, ".png")
+        p <- qqunif.plot(my.pvalue.list, auto.key=list(corner=c(.95,.05)), xlim=c(0,5), ylim=c(0,5))
+        png(filename)
+        print(p)
+        dev.off()
+        print(
+          paste0("Cohort = ",cohort, 
+                 ", Index = ", i, 
+                 ", chisq for UNICORN = ", lambda.unicorn, 
+                 ", chisq for GWAS  = ", lambda.gwas))
+    }
+}
+}
+}
+```
