@@ -41,7 +41,8 @@ bfiles = ["gs://control_repo_by_platform/Axiom_Genome-Wide_Human_Origins/neurode
           "gs://control_repo_by_platform/HumanHap550_v3.0/panscan/cohort/cohort_ready4QC_AF_HRC_sa/cohort.all.final",
           "gs://control_repo_by_platform/HumanHap550_v3.0/study_of_pediatric_disorders/study_of_pediatric_disorders_ready4QC_AF_HRC_sa/study_of_pediatric_disorders.all.final",
           "gs://control_repo_by_platform/HumanOmniExpress_12v1.0A/neurodevelopmental_genomics/v1/v1_ready4QC_AF_HRC_sa/v1.all.final",
-          "gs://control_repo_by_platform/HumanOmniExpress_12v1.0A/panscan/panscan_ready4QC_AF_HRC_sa/panscan.all.final"]
+          "gs://control_repo_by_platform/HumanOmniExpress_12v1.0A/panscan/panscan_ready4QC_AF_HRC_sa/panscan.all.final",
+          "gs://control_repo_by_platform/Axiom_KP_UCSF_EUR/gera/gera_ready4QC_AF_HRC_sa/gera.all.final"]
 
 output_root_directories = ["gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_axiom",
                            "gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_axiom_tx",
@@ -61,7 +62,8 @@ output_root_directories = ["gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_de
                            "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_cohort_550v3",
                            "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_pediatric_disorders_550v3",
                            "gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_omni",
-                           "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_omni"]
+                           "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_omni",
+                           "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gera_eur"]
 
 mt_1kg_path = "gs://unicorn-resources/1000_genomes/pop_4pop_mix_SEQ.mt"
 mt_1kg_eur_path = "gs://unicorn-resources/1000_genomes/pop_euro_eur_with_aj.mt"

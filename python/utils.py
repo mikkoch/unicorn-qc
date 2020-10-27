@@ -7,19 +7,19 @@ import pandas as pd
 import random
 
 
-def calculate_per_chr_scrt(mt: hl.MatrixTable, scrt_col:str= 'scrt_per_chr')->hl.MatrixTable:
+def calculate_per_chr_sample_call_rate(mt: hl.MatrixTable, sample_call_rate_col:str = 'sample_call_rate_col')->hl.MatrixTable:
     """
         This function calculate per-chromosome sample call rate, minimum sample call rate cross chromosome
             and annotate original matrix table
         :param MatrixTable mt: Input Hail MatrixTable
-        :param str scrt_col: Columns storing minimum sample call rate among chromosome
+        :param str sample_call_rate_col: Columns storing minimum sample call rate among chromosome
         :rtype: MatrixTable
         """
     mt = mt.annotate_rows(contig=mt.locus.contig)
     mt_per_chr = mt.group_rows_by(mt.contig).aggregate(call_rate=hl.agg.fraction(hl.is_defined(mt.GT)))
     mt_per_chr = mt_per_chr.annotate_cols(
         call_rate_per_chr=hl.agg.min(mt_per_chr.call_rate))
-    mt = mt.annotate_cols(**{scrt_col: mt_per_chr.cols()[mt.col_key].call_rate_per_chr})
+    mt = mt.annotate_cols(**{sample_call_rate_col: mt_per_chr.cols()[mt.col_key].call_rate_per_chr})
     return(mt)
 
 

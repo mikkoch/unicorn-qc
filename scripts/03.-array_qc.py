@@ -23,12 +23,68 @@ hwe_threshold = 1e-4  # Hardy Weinberg threshold
 aso_threshold = 1e-4  # 1KG association threshold
 
 
+######################################################################################################
+# Defining the list of input bfiles, output root directory                                           #
+######################################################################################################
+input_directories = ["gs://unicorn-qc/pre-imputation-qc/cohort-qc/geneva_t2d_hpfs/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/geneva_t2d_nhs/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_scz/share/eur(mainland).mt/"]
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/ad_family/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_610/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_610/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_pediatric_disorders_610/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_glaucoma/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_vte/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/exoseq_als_550v1/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/exoseq_als_550v3/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_550v3/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_case_control_550v3/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_cohort_550v3/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gwas_pediatric_disorders_550v3/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/neuro_develop_omni/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/panscan_omni/share/eur(mainland).mt/",
+                     "gs://unicorn-qc/pre-imputation-qc/cohort-qc/gera_eur/share/eur(mainland).mt/"]
+
+cohort_labels = [  "geneva_t2d_hpfs",
+                   "geneva_t2d_nhs",
+                   "gwas_scz",
+                   "ad_family",
+                   "neuro_develop_610",
+                   "panscan_610",
+                   "gwas_pediatric_disorders_610",
+                   "gwas_glaucoma",
+                   "gwas_vte",
+                   "exoseq_als_550v1",
+                   "exoseq_als_550v3",
+                   "neuro_develop_550v3",
+                   "panscan_case_control_550v3",
+                   "panscan_cohort_550v3",
+                   "gwas_pediatric_disorders_550v3",
+                   "neuro_develop_omni",
+                   "panscan_omni",
+                   'gera_eur']
+
+genotyping_arrays = [ #"Affymetrix_6.0", "Affymetrix_6.0", "Affymetrix_6.0"]
+                       "Human610660", "Human610660", "Human610660",
+                       "Human610660", "Human610660", "Human610660",
+                       "Human550", "Human550", "Human550",
+                       "Human550", "Human550", "Human550",
+                       "HumanOmni", "HumanOmni", "Axiom_KP_UCSF_EUR"]
+
+populations = [ #"eur_mainland", "eur_mainland", "eur_mainland"]
+                "eur_mainland", "eur_mainland", "eur_mainland",
+                "eur_mainland", "eur_mainland", "eur_mainland",
+                "eur_mainland", "eur_mainland", "eur_mainland",
+                "eur_mainland", "eur_mainland", "eur_mainland",
+                "eur_mainland", "eur_mainland", "eur_mainland"]
+
 mt_1kg_eur_path = "gs://unicorn-resources/1000_genomes/pop_euro_eur_SEQ.mt"
+
 output_root_directory = "gs://unicorn-qc/pre-imputation-qc/array-qc"
 
 
 
-def __main__(mt_path: str, cohort_label: str, output_root_directory:str, population:str, array:str,
+def __main__(mt_path_list: List[str], cohort_labels: List[str], output_root_directory:str, population:str, array:str,
              mt_1kg_eur_path:str, r2:float, pirsh: float, scrsh:float, scrsh_chr: float, vcrsh: float, mafrsh: float,
              hwersh: float, assrsh: float):
     """
@@ -64,12 +120,18 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
         """
 
     # Merge MatrixTable from same population and same genotyping array
-    mt = hl.read_matrix_table(mt_path)
-    mt = mt.annotate_cols(cohort=cohort_label)
+    mt_list = list()
+    for mt_path, cohort in zip(mt_path_list, cohort_labels):
+        mt = hl.read_matrix_table(mt_path)
+        mt = mt.annotate_cols(cohort=cohort)
+        mt_list.append(mt)
+    mt = reduce(lambda x, y: x.union_cols(y), mt_list)
+    mt = mt.annotate_cols(population=population, array=array)
 
     # Read 1KG EUR mainland matrix table
     mt_1kg_eur = hl.read_matrix_table(mt_1kg_eur_path)
     mt_1kg_eur = mt_1kg_eur.filter_cols(mt_1kg_eur.population == 'eur(mainland)')
+    print(mt_1kg_eur.count())
 
     # Build Directory structure
     directory_structure = build_array_qc_directory_structure(output_root_directory, population=population, array=array)
@@ -81,6 +143,7 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
     mt = hl.sample_qc(mt)
     mt = hl.variant_qc(mt)
     mt = calculate_per_chr_scrt(mt=mt, scrt_col='scr_chr')
+    mt = mt.cache()
 
     # Calculate number of samples & variants that fail each filter
     n_scrsh     = mt.aggregate_cols(hl.agg.count_where(mt.sample_qc.call_rate < scrsh))
@@ -90,23 +153,22 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
     n_hwesh     = mt.aggregate_rows(hl.agg.count_where((mt.het_freq_hwe < hwersh) | (mt.p_value < hwersh)))
 
     # Filter samples & variants
-    mt = mt.filter_cols(
-        (mt.sample_qc.call_rate > scrsh) &
-        (mt.scr_chr > scrsh_chr), keep=True)
-    mt = mt.filter_rows(
-        (mt.variant_qc.call_rate > vcrsh) &
-        (mt.variant_qc.AF[0] > mafrsh) &
-        (mt.variant_qc.AF[1] > mafrsh) &
-        (mt.het_freq_hwe > hwersh) &
-        (mt.p_value > hwersh), keep=True)
+    mt = mt.filter_cols((mt.sample_qc.call_rate > scrsh) &
+                        (mt.scr_chr > scrsh_chr), keep=True)
+    mt = mt.filter_rows((mt.variant_qc.call_rate > vcrsh) &
+                        (mt.variant_qc.AF[0] > mafrsh) &
+                        (mt.variant_qc.AF[1] > mafrsh) &
+                        (mt.het_freq_hwe > hwersh) &
+                        (mt.p_value > hwersh), keep=True)
 
     # LD pruning
-    pruned_variants_list = hl.read_table("gs://unicorn-qc/pre-imputation-qc/cohort-qc/gera_eur_10000/pca/ld_pruned_variants.kt")
+    pruned_variants_list = ld_prune(mt, r2=r2, pruned_variants_list=True)
     pruned_mt = mt.filter_rows(hl.is_defined(pruned_variants_list[mt.row_key]), keep=True)
-    #samples_to_remove = identify_related_samples(pruned_mt, pihat_threshold=pirsh)
+    samples_to_remove = identify_related_samples(pruned_mt, pihat_threshold=pirsh)
 
     # Filter related samples
-    n_related = 0
+    n_related = samples_to_remove.count()
+    mt = mt.filter_cols(hl.is_defined(samples_to_remove[mt.col_key]), keep=False)
 
     # PCA
     scores_ht, _ = pca(mt=pruned_mt, n_evecs=6, remove_outliers=False)
@@ -114,13 +176,12 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
 
     # Plot PCs with cohort label
     scores_ht = scores_ht.annotate(cohort=mt.index_cols(scores_ht.key).cohort)
-    scores_ht = scores_ht.annotate(
-        PC1=scores_ht.scores[0],
-        PC2=scores_ht.scores[1],
-        PC3=scores_ht.scores[2],
-        PC4=scores_ht.scores[3],
-        PC5=scores_ht.scores[4],
-        PC6=scores_ht.scores[5])
+    scores_ht = scores_ht.annotate(PC1=scores_ht.scores[0],
+                                   PC2=scores_ht.scores[1],
+                                   PC3=scores_ht.scores[2],
+                                   PC4=scores_ht.scores[3],
+                                   PC5=scores_ht.scores[4],
+                                   PC6=scores_ht.scores[5])
     scatter(ht=scores_ht, x_location='PC1', y_location='PC2', color_location='cohort',
             plot_path=directory_structure['pca'] + '/SCATTER_PC1_PC2_BEFORE_QC.png')
     scatter(ht=scores_ht, x_location='PC1', y_location='PC3', color_location='cohort',
@@ -134,14 +195,33 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
     scatter(ht=scores_ht, x_location='PC5', y_location='PC6', color_location='cohort',
             plot_path=directory_structure['pca'] + '/SCATTER_PC5_PC6_BEFORE_QC.png')
 
+    # Pseudo Case-Control Analysis
+    n_cscohort = 0
+    pruned_1kg_eur_mt = mt_1kg_eur.filter_rows(hl.is_defined(pruned_variants_list[mt_1kg_eur.row_key]), keep=True)
+    scores_1kg_eur_ht, loadings_1kg_eur_ht = pca(mt=pruned_1kg_eur_mt, n_evecs=6, remove_outliers=False)
+    scores_ht = pca_project(mt=mt, loadings_ht=loadings_1kg_eur_ht, correct_shrinkage=True)
+    mt = mt.annotate_cols(scores=scores_ht[mt.col_key].scores)
+    if len(cohort_labels) > 1:
+        for cohort in cohort_labels:
+            mt = mt.annotate_cols(is_case=hl.cond(mt.cohort == cohort, 1, 0))
+            result_ht = hl.linear_regression_rows(y=mt.is_case, x=mt.GT.n_alt_alleles(), covariates=[1, mt.scores[0], mt.scores[1], mt.scores[2], mt.scores[3], mt.scores[4], mt.scores[5]])
+            mt = mt.annotate_rows(**{'pvalue_' + cohort: result_ht[mt.row_key].p_value})
+            mt = mt.drop('is_case')
+
+        # Calculate the minimum pvalues cross each each cross cohort comparison
+        mt = mt.annotate_rows(pvalues_assoc=hl.min([mt['pvalue_' + str(cohort)] for cohort in cohort_labels]))
+
+        # Count number of variants failing cross-cohort comparison
+        n_cscohort = mt.aggregate_rows(hl.agg.count_where(mt.pvalues_assoc < assrsh))
+
+        # Filter variants
+        mt = mt.filter_rows(mt.pvalues_assoc > assrsh, keep=True)
 
     # Pseudo Case-Control Analysis against 1KG EUR
     n_cs1kg = 0
     if population == "eur_mainland":
-        pruned_1kg_eur_mt = mt_1kg_eur.filter_rows(hl.is_defined(pruned_variants_list[mt_1kg_eur.row_key]), keep=True)
-        scores_1kg_eur_ht, loadings_1kg_eur_ht = pca(mt=pruned_1kg_eur_mt, n_evecs=6, remove_outliers=False)
         mt_merged = mt.select_cols().select_rows().union_cols(mt_1kg_eur.select_cols().select_rows())
-        scores_ht = scores_ht.select('scores').union(scores_1kg_eur_ht)
+        scores_ht = scores_ht.union(scores_1kg_eur_ht)
 
         mt_merged = mt_merged.annotate_cols(scores=scores_ht[mt_merged.col_key].scores, is_case=hl.cond(hl.is_defined(mt.index_cols(mt_merged.col_key)), 1, 0))
         result_ht = hl.linear_regression_rows(y=mt_merged.is_case, x=mt_merged.GT.n_alt_alleles(), covariates=[1, mt_merged.scores[0], mt_merged.scores[1], mt_merged.scores[2], mt_merged.scores[3], mt_merged.scores[4], mt_merged.scores[5]])
@@ -178,10 +258,11 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
         scores_ht.write(directory_structure['pca'] + '/scores_1kg.kt', overwrite=True)
 
     # LD pruning
+    #pruned_variants_list = ld_prune(mt, r2=r2, pruned_variants_list=True)
     pruned_mt = mt.filter_rows(hl.is_defined(pruned_variants_list[mt.row_key]), keep=True)
 
     # PCA
-    scores_ht, _ = pca(mt=pruned_mt, n_evecs=6, remove_outliers=True, sigma_thresh=5, n_outlieriters=1)
+    scores_ht, _ = pca(mt=pruned_mt, n_evecs=10, remove_outliers=True, sigma_thresh=5, n_outlieriters=3)
     scores_ht.write(directory_structure["pca"] + "/scores.ht", overwrite=True)
 
     # Plot PCs with cohort label
@@ -234,7 +315,7 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
                 "SNPs: call rate < %s" % vcrsh: n_vcrsh,
                 "SNPs: minor allele frequency < %s" % mafrsh: n_mafsh,
                 "SNPs: HWE p-values < %s" % hwersh: n_hwesh,
-                "SNPs: Cross cohorts pseudo case-control across p-value < %s" % assrsh: n_cs1kg}}
+                "SNPs: Cross cohorts pseudo case-control across p-value < %s" % assrsh: n_cscohort + n_cs1kg}}
     with hl.hadoop_open(directory_structure["summary"] + "/meta.json", 'w') as outfile:
         json.dump(meta, outfile)
 
@@ -248,20 +329,29 @@ def __main__(mt_path: str, cohort_label: str, output_root_directory:str, populat
 ######################################################################################################
 # Run QC pipeline                                                                                    #
 ######################################################################################################
+input_pandas = pd.DataFrame({'input_directories': input_directories,
+                             'cohort_labels': cohort_labels,
+                             'genotyping_arrays': genotyping_arrays,
+                             'populations': populations})
+grouped_pandas = input_pandas.groupby(['genotyping_arrays', 'populations'])
 
-__main__(
-    mt_path="gs://unicorn-qc/pre-imputation-qc/cohort-qc/gera_eur/share/eur(mainland).mt/",
-    cohort_label='gera_eur',
-    output_root_directory="gs://unicorn-qc/pre-imputation-qc/array-qc",
-    population="eur_mainland",
-    array="Axiom_KP_UCSF_EUR",
-    mt_1kg_eur_path="gs://unicorn-resources/1000_genomes/pop_euro_eur_SEQ.mt",
-    r2=r2,
-    pirsh=pihat_threshold,
-    scrsh=sample_call_rate_threshold,
-    scrsh_chr=call_rate_per_chromosome_threshold,
-    vcrsh=variant_call_rate_threshold,
-    mafrsh=maf_threshold,
-    hwersh=hwe_threshold,
-    assrsh=aso_threshold)
+for group, data in grouped_pandas:
+    array = group[0]
+    population = group[1]
+    mt_path_list = data['input_directories'].tolist()
+    cohort_labels = data['cohort_labels'].tolist()
+    __main__(mt_path_list=mt_path_list,
+             cohort_labels=cohort_labels,
+             output_root_directory=output_root_directory,
+             population=population,
+             array=array,
+             mt_1kg_eur_path=mt_1kg_eur_path,
+             r2=r2,
+             pirsh=pihat_threshold,
+             scrsh=sample_call_rate_threshold,
+             scrsh_chr=call_rate_per_chromosome_threshold,
+             vcrsh=variant_call_rate_threshold,
+             mafrsh=maf_threshold,
+             hwersh=hwe_threshold,
+             assrsh=aso_threshold)
 
