@@ -9,16 +9,10 @@ from qc.plotting import *
 from main.pca import *
 
 
-def array_qc(path_to_mt: str, output_root_directory: str, mt_1kg_eur_path: str, r2: float, 
-    pihat: float, sample_call_rate_thresh:float, sample_call_rate_thresh_chr: float, 
-    variant_call_rate_thresh: float, maf_thresh: float, hwe_thresh: float, ass_thresh: float):
+def cross_array_comparison(path_to_mt: str, output_root_directory: str, mt_1kg_eur_path: str, r2: float, 
+    pihat: float, ass_thresh: float):
     """
-        This function performs array-level QC including the following QC filters:
-        - sample call rate
-        - sample call rate for each chromosome 
-        - variant call rate 
-        - minor allele frequencies 
-        - hardy weinberg equilibrium
+        This function performs post-imputaion QC including the following QC filters:
         - pseudo case-control GWAS (tagging samples from one cohort as cases, from the other cohorts as controls)
         - pseudo case-control GWAS against 1KG 
         ----
@@ -27,11 +21,6 @@ def array_qc(path_to_mt: str, output_root_directory: str, mt_1kg_eur_path: str, 
         :param str mt_1kg_eur_path: path to 1KG EUR population
         :param float r2: LD pruning threshold
         :param float pihat: pihat threshold for filtering related samples
-        :param float sample_call_rate_thresh: sample call rate threshold
-        :param float sample_call_rate_thresh_chr: per chromosome sample call rate
-        :param float variant_call_rate_thresh: variant call rate threshold
-        :param float maf_thresh: minor allele frequencies threshold
-        :param float hwe_thresh: hardy weinberg equilibrium test pvalues threshold
         :param float ass_thresh: p-value threshold for pseudo GWAS
         """
 
@@ -44,28 +33,6 @@ def array_qc(path_to_mt: str, output_root_directory: str, mt_1kg_eur_path: str, 
 
     # Count number of samples and variants before QC
     n_variants_before_qc, n_samples_before_qc = mt.count()
-
-    # Perform sample QC
-    mt = hl.sample_qc(mt)
-    mt = hl.variant_qc(mt)
-    mt = calculate_per_chr_sample_call_rate(mt = mt, sample_call_rate_col = 'scr_chr') 
-    mt = mt.cache()
-
-    # Calculate number of samples & variants that fail each filter
-    n_sample_call_rate_thresh     = mt.aggregate_cols(hl.agg.count_where(mt.sample_qc.call_rate < sample_call_rate_thresh))
-    n_sample_call_rate_thresh_chr = mt.aggregate_cols(hl.agg.count_where(mt.scr_chr < sample_call_rate_thresh_chr))
-    n_variant_call_rate_thresh     = mt.aggregate_rows(hl.agg.count_where(mt.variant_qc.call_rate < variant_call_rate_thresh))
-    n_mafsh     = mt.aggregate_rows(hl.agg.count_where((mt.variant_qc.AF[0] < maf_thresh) | (mt.variant_qc.AF[1] < maf_thresh)))
-    n_hwesh     = mt.aggregate_rows(hl.agg.count_where((mt.het_freq_hwe < hwe_thresh) | (mt.p_value < hwe_thresh)))
-
-    # Filter samples & variants
-    mt = mt.filter_cols((mt.sample_qc.call_rate > sample_call_rate_thresh) &
-                        (mt.scr_chr > sample_call_rate_thresh_chr), keep=True)
-    mt = mt.filter_rows((mt.variant_qc.call_rate > variant_call_rate_thresh) &
-                        (mt.variant_qc.AF[0] > maf_thresh) &
-                        (mt.variant_qc.AF[1] > maf_thresh) &
-                        (mt.het_freq_hwe > hwe_thresh) &
-                        (mt.p_value > hwe_thresh), keep=True)
 
     # LD pruning
     pruned_variants_list = ld_prune(mt, r2=r2, pruned_variants_list=True)
@@ -133,17 +100,8 @@ def array_qc(path_to_mt: str, output_root_directory: str, mt_1kg_eur_path: str, 
             "Number of Samples after QC:": n_samples_after_qc,
             "Number of Variants before QC": n_variants_before_qc,
             "Number of Variants after QC": n_variants_after_qc,
-            "Genotyping Array": array,
-            "Population": population,
-            "Sample QC Summary": {
-                "IDs: call rate < %s" % sample_call_rate_thresh: n_sample_call_rate_thresh,
-                "IDs: minimum per-chromosome call rate < %s" % sample_call_rate_thresh_chr: n_sample_call_rate_thresh_chr,
-                "IDs: pi-hat > %s" % pihat: n_related}, 
             "Variant QC Summary": {
-                "SNPs: call rate < %s" % variant_call_rate_thresh: n_variant_call_rate_thresh,
-                "SNPs: minor allele frequency < %s" % maf_thresh: n_mafsh,
-                "SNPs: HWE p-values < %s" % hwe_thresh: n_hwesh,
                 "SNPs: Cross cohorts pseudo case-control across p-value < %s" % ass_thresh: n_pseudo_case_ontrol + n_pseudo_1kg_case_control}}
-    with hl.hadoop_open(directory_structure["summary"] + "/meta.json", 'w') as outfile:
+    with hl.hadoop_open(directory_structure["summary"] + "/cross_array.json", 'w') as outfile:
         json.dump(meta, outfile)
 
