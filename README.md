@@ -21,7 +21,14 @@ We use the [Michigan Imputation server](https://imputationserver.sph.umich.edu/i
 
 
 ### Module 4: Re-imputation. 
+- *Generating Blacklist of SNPs:* generate blacklist of SNPs based on ER2 filter [get_blacklist.py](python/get_blacklist.py)
+- *Re-run analysis.* filter blacklist of SNPs from final data of module 1, and then re-run module 2, 3, 4.
+
  
+
+### Blacklist 
+- We provide blacklist of SNPs that based on ER2 filter for array types [HumanHap300](blacklist/Human300.tsv), [HumanHap550](blacklist/Human550.tsv), [HumanHap610](blacklist/Human610.tsv), [HumanHap660](blacklist/Human660.tsv), [Affymetrix 6.0](blacklist/Affymetrix_6.tsv) and [Axiom_KP_UCSF_EUR](blacklist/Axiom_KP_UCSF_EUR.tsv)
+- We also provide a blacklist of SNPs that exhibit significant p-values in cross-array-type comparison: [cross-comparison blacklist](blacklist/cross_comparison.tsv)
 
 
 
